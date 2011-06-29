@@ -1,5 +1,5 @@
 package org.jlore.core
 
-trait ObjectVersion {
-  val obj: VersionedObject
+trait ObjectVersion[+T] {
+  val obj: VersionedObject[T]
 }

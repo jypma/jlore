@@ -3,20 +3,23 @@ package org.jlore.model
 import org.jlore.core._
 
 case class Instance (
-    obj:VersionedObject, 
-    values:Map[Property,Value] = Map.empty, 
-    relations:Map[Relation,Instance] = Map.empty
-) extends ObjectVersion
+    obj:VersionedObject[Instance], 
+    values:Map[VersionedObject[Property],Value] = Map.empty, 
+    relations:Map[VersionedObject[Relation],VersionedObject[Instance]] = Map.empty
+) extends ObjectVersion[Instance]
 
 object Instance {
-  class Create (val id:ID) extends Command {
-    def run (b: Branch) = new Instance(new VersionedObject(id)) :: Nil
+  class Create (val obj: VersionedObject[Instance]) extends Command {
+    def run (b: Branch) = new Instance(obj) :: Nil
   }
   
-  class SetProperty (val i: Instance, val p:Property, n: Option[Value]) extends Command {
-    def run (b: Branch) = (n match {
-      case Some(value) => i.copy(values = i.values + (p -> value))
-      case None => i.copy(values = i.values - p)
-    }) :: Nil
+  class SetProperty (val i: VersionedObject[Instance], val p:VersionedObject[Property], n: Option[Value]) extends Command {
+    def run (b: Branch) = {
+      val instance = b.get[Instance](i)
+      (n match {
+        case Some(value) => instance.copy(values = instance.values + (p -> value))
+        case None => instance.copy(values = instance.values - p)
+      }) :: Nil
+    }
   }
 }

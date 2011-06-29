@@ -7,7 +7,7 @@ case class ID private (msb:Long, lsb: Long) {
 }
 
 object ID {
-  def random = {
+  def random() = {
     val id = UUID.randomUUID()
     new ID (msb=id.getMostSignificantBits(), id.getLeastSignificantBits())
   }

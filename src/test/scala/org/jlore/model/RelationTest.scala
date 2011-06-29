@@ -8,21 +8,24 @@ import org.junit.Test
 class RelationTest extends AssertionsForJUnit {
   @Test def test {
     var b = new Branch()
-    val parent = new VersionedObject(ID.random)
-    val child = new VersionedObject(ID.random)
+    val parent = new VersionedObject[Relation](ID.random)
+    val child = new VersionedObject[Relation](ID.random)
     b += new Relation.Create(parent, child)
-    var relation = b.get[Relation](parent)
+    /*
+    var relation = parent.in(b)
     assertNotNull (relation.other)
-    assertSame (relation.other.other, relation)
+    assertSame (child, relation.other)
+    assertSame (parent, relation.other.in(b).other)
     
     b += new Relation.SetName(parent, Value("Parent"))
-    relation = b.get[Relation](parent)
+    relation = parent.in(b)
     assertEquals ("Parent", relation.name.get.asString)
     assertNotNull (relation.other)
     
     b += new Relation.SetName(relation.other, Value("Child"))
-    relation = b.get[Relation](child)
+    relation = child.in(b)
     assertEquals ("Child", relation.name.get.asString)
-    assertEquals ("Parent", relation.other.name.get.asString)
+    assertEquals ("Parent", relation.other.in(b).name.get.asString)
+    */
   }
 }

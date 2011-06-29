@@ -8,9 +8,9 @@ import org.junit.Test
 class PropertyTest extends AssertionsForJUnit {
   @Test def test {
     var b = new Branch()
-    val myProp = new VersionedObject(ID.random)
+    val myProp = new VersionedObject[Property](ID.random())
     b += new Property.Create(myProp)
     b += new Property.SetName(myProp, Value("MyProp"))
-    assertEquals ("MyProp", b.get[Property](myProp).name.get.asString)
+    assertEquals ("MyProp", myProp.in(b).name.get.asString)
   }
 }
