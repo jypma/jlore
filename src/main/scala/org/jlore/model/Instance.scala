@@ -9,11 +9,11 @@ case class Instance (
 ) extends ObjectVersion[Instance]
 
 object Instance {
-  class Create (val obj: VersionedObject[Instance]) extends Command {
+  class Create (id:ID, val obj: VersionedObject[Instance]) extends Command(id) {
     def run (b: Branch) = new Instance(obj) :: Nil
   }
   
-  class SetProperty (val i: VersionedObject[Instance], val p:VersionedObject[Property], n: Option[Value]) extends Command {
+  class SetProperty (id:ID, val i: VersionedObject[Instance], val p:VersionedObject[Property], n: Option[Value]) extends Command(id) {
     def run (b: Branch) = {
       val instance = b.get[Instance](i)
       (n match {

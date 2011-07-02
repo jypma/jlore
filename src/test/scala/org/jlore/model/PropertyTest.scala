@@ -1,16 +1,15 @@
 package org.jlore.model
 
 import org.jlore.core._
-import org.scalatest.junit.AssertionsForJUnit
-import org.junit.Assert._
-import org.junit.Test
 
-class PropertyTest extends AssertionsForJUnit {
-  @Test def test {
+class PropertyTest extends org.jlore.Specification {
+  "properties in branches" should {
     var b = new Branch()
-    val myProp = new VersionedObject[Property](ID.random())
-    b += new Property.Create(myProp)
-    b += new Property.SetName(myProp, Value("MyProp"))
-    assertEquals ("MyProp", myProp.in(b).name.get.asString)
+    "be creatable and have their name set" in {
+      val myProp = new VersionedObject[Property](ID())
+      b += new Property.Create(ID(), myProp)
+      b += new Property.SetName(ID(), myProp, Value("MyProp"))
+      myProp.in(b).name.get.asString must_== "MyProp"
+    }
   }
 }

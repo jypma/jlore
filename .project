@@ -21,4 +21,11 @@
 		<nature>org.scala-ide.sdt.core.scalanature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>bin</name>
+			<type>2</type>
+			<locationURI>PROJECT_LOC/target/classes</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
