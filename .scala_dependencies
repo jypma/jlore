@@ -24,9 +24,9 @@
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/VersionedObject.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/Specification.scala
-/Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Property.scala
-/Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Value.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala
+/Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Value.scala
+/Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Property.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/VersionedObject.scala
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala
@@ -54,15 +54,15 @@
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/PropertyTest.scala -> /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/PropertyTest.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/PropertyTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala
-/Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala
+/Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/VersionedObject.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/Specification.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Property.scala
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Value.scala
-/Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala
-/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala
+/Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala
+/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/VersionedObject.scala
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ObjectVersion.scala
@@ -70,7 +70,7 @@
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Property.scala
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Value.scala
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Relation.scala
-/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala
+/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala -> /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Instance.scala
 -------
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Value.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/model/Value$.class
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/model/Value.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/model/Value.class
@@ -105,6 +105,7 @@
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/BranchTest.class
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/core/BranchTest.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/BranchTest$$anonfun$1.class
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/Branch$.class
+/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/Branch$$anonfun$$plus$1.class
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/Branch.class
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/Branch$$anonfun$1.class
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/Branch.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/Branch$Create.class
@@ -120,9 +121,9 @@
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/PropertyTest.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/model/PropertyTest$$anonfun$1$$anonfun$apply$1$$anonfun$apply$2.class
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/PropertyTest.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/model/PropertyTest.class
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/PropertyTest.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/model/PropertyTest$$anonfun$1.class
-/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/ID.class
-/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/ID$.class
 /Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/ID$$anonfun$node$1.class
+/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/ID$.class
+/Users/jan/Documents/workspace/jlore/src/main/scala/org/jlore/core/ID.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/core/ID.class
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/model/InstanceTest.class
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/model/InstanceTest$$anonfun$1$$anonfun$apply$1$$anonfun$apply$2.class
 /Users/jan/Documents/workspace/jlore/src/test/scala/org/jlore/model/InstanceTest.scala -> /Users/jan/Documents/workspace/jlore/target/classes/org/jlore/model/InstanceTest$$anonfun$1.class
