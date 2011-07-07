@@ -18,4 +18,21 @@ class BranchTest extends org.jlore.Specification {
       myProp.in(b).name.get.asString must_== "PropA"
     }
   }
+  
+  "a branch which has a parent" should {
+    var parent = new Branch() 
+    val myProp = new VersionedObject[Property](ID())
+    parent += new Property.Create(ID(), myProp)
+    parent += new Property.SetName(ID(), myProp, Value("myProp"))
+    var b = new Branch (parent)
+    "remember the latest values of its parent" in {
+      myProp.in(b) must be(myProp.in(parent))
+    }
+    "have changes independent of its parent" in {
+      b += new Property.SetName(ID(), myProp, Value("myRenamedProp"))
+      myProp.in(b) must notBe(myProp.in(parent))
+      myProp.in(b).name.get.asString must_== "myRenamedProp"
+      myProp.in(parent).name.get.asString must_== "myProp"
+    }
+  }
 }
