@@ -28,11 +28,16 @@ class BranchTest extends org.jlore.Specification {
     "remember the latest values of its parent" in {
       myProp.in(b) must be(myProp.in(parent))
     }
-    "have changes independent of its parent" in {
+    "have changes independent of its parent, until they are merged" in {
       b += new Property.SetName(ID(), myProp, Value("myRenamedProp"))
       myProp.in(b) must notBe(myProp.in(parent))
       myProp.in(b).name.get.asString must_== "myRenamedProp"
       myProp.in(parent).name.get.asString must_== "myProp"
+      
+      parent += new Branch.Merge(ID(), b)
+      myProp.in(parent).name.get.asString must_== "myRenamedProp"
+      // only equality (objects are re-created for the merged branch)
+      myProp.in(b) must_== myProp.in(parent) 
     }
   }
 }

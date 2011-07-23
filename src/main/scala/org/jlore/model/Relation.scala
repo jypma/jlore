@@ -10,12 +10,13 @@ case class Relation(
 ) extends ObjectVersion[Relation]
 
 object Relation {
-  class Create(id:ID, val endA: VersionedObject[Relation], endB: VersionedObject[Relation]) extends Command(id) {
-    def run (b: Branch) = new Relation(endA, None, None, endB) ::
-                          new Relation(endB, None, None, endA) :: Nil
+  class Create(id:ID, val endA: VersionedObject[Relation], 
+      endB: VersionedObject[Relation]) extends ChangeCommand(id) {
+    def change (b: Branch) = new Relation(endA, None, None, endB) ::
+                             new Relation(endB, None, None, endA) :: Nil
   }
 
-  class SetName(id:ID, val r: VersionedObject[Relation], n: Value) extends Command(id) {
-    def run (b: Branch) = b.get[Relation](r).copy(name = Some(n)) :: Nil
+  class SetName(id:ID, val r: VersionedObject[Relation], n: Value) extends ChangeCommand(id) {
+    def change (b: Branch) = b.get[Relation](r).copy(name = Some(n)) :: Nil
   }
 }

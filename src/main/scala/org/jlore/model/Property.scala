@@ -8,12 +8,12 @@ case class Property (
 ) extends ObjectVersion[Property] 
 
 object Property {
-  class Create (id:ID, val obj:VersionedObject[Property]) extends Command(id) {
-    def run (b: Branch) = new Property(obj) :: Nil
+  class Create (id:ID, val obj:VersionedObject[Property]) extends ChangeCommand(id) {
+    def change (b: Branch) = new Property(obj) :: Nil
   }
   
-  class SetName (id:ID, val p:VersionedObject[Property], n: Value) extends Command(id) {
-    def run (b: Branch) = {
+  class SetName (id:ID, val p:VersionedObject[Property], n: Value) extends ChangeCommand(id) {
+    def change (b: Branch) = {
       b.get[Property](p).copy(name=Some(n)) :: Nil
     }
   }
