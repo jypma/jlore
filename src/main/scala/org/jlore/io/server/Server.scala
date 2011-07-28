@@ -10,8 +10,11 @@ import java.nio.channels.spi.SelectorProvider
 import java.net.InetSocketAddress
 import java.net.InetAddress
 import java.io.IOException
+import java.util.concurrent.LinkedBlockingQueue
+import scala.collection.mutable.ArrayBuffer
+import org.jlore.logging.Log
 
-class Server (host: InetAddress, port: Int) {
+class Server (host: InetAddress, port: Int) extends Log {
   def this(port: Int) = this(null, port)
   private var thread: Option[ServerThread] = None
   
@@ -23,22 +26,46 @@ class Server (host: InetAddress, port: Int) {
     serverChannel.configureBlocking(false)
     serverChannel.socket.bind (new InetSocketAddress(host, port))
     serverChannel.register (selector, SelectionKey.OP_ACCEPT)
+    private val changes = new LinkedBlockingQueue[() => Unit]()
+    private var pendingData: Map[SocketChannel,ArrayBuffer[ByteBuffer]] = Map.empty
     
     override def run() {
       while (true) {
+        //println("handling changes")
+        handleChanges()
+        //println("selecting")
         selector.select
+        //print("waking up with ")
+        if (selector.selectedKeys.isEmpty) {
+          log.info("Woke up with no selected keys! Keys:")
+          for (key <- selector.keys) {
+            log.info(" " + key + " in " + key.interestOps)
+          }
+        }
+        //println
         for (key <- selector.selectedKeys; if key.isValid){
+          //println ("handling a key")
           if (key.isAcceptable) accept(key) 
           else if (key.isReadable) read(key)
+          else if (key.isWritable) write(key)
         }
         selector.selectedKeys.clear
+      }
+    }
+    
+    private def handleChanges() {
+      while (!changes.isEmpty) {
+        val change = changes.remove()
+        log.info("handling " + change)
+        change()
       }
     }
     
     private def accept(key: SelectionKey) {
       val socketChannel = key.channel.asInstanceOf[ServerSocketChannel].accept
       socketChannel.configureBlocking(false)
-      socketChannel.register (selector, SelectionKey.OP_READ).attach(new Connection().start)
+      socketChannel.register (selector, SelectionKey.OP_READ).attach(
+          new Connection(Server.this, socketChannel).start)
     }
     
     private def read(key: SelectionKey) {
@@ -61,6 +88,44 @@ class Server (host: InetAddress, port: Int) {
       key.cancel
       key.attachment.asInstanceOf[Connection] ! Connection.Closed
     }
+    
+    private def write(key: SelectionKey) {
+      log.info("writing")
+      val socketChannel = key.channel.asInstanceOf[SocketChannel]
+      synchronized {
+        val list = pendingData(socketChannel)
+        log.info("found " + list.size + " items for " + socketChannel)
+        var socketFull = false
+        while (!list.isEmpty || socketFull) {
+          val buf = list(0)
+          log.info("writing " + buf)
+          socketChannel.write(buf)
+          socketFull = buf.remaining() > 0
+          if (!socketFull) list.remove(0)
+        }
+        if (list.isEmpty) {
+           log.info("interest back in read")
+           key.interestOps(SelectionKey.OP_READ);
+        }
+      }
+    }
+    
+    def send(socket: SocketChannel, data: Array[Byte]) {
+      log.info("putting changes")
+      changes.put { () =>
+        log.info("interest in write")
+        val key = socket.keyFor(selector)
+        key.interestOps(SelectionKey.OP_WRITE);
+      }
+      log.info("pending data")
+      synchronized {
+        var newList = pendingData.getOrElse(socket, ArrayBuffer.empty)
+        newList += ByteBuffer.wrap(data)
+        pendingData += (socket -> newList)
+      }
+      log.info("wakeup selector")
+      selector.wakeup();
+    }
   }
   
   def start() {
@@ -70,6 +135,10 @@ class Server (host: InetAddress, port: Int) {
         thread.get.start
       }
     }
+  }
+  
+  def send(socket: SocketChannel, data: Array[Byte]) {
+    if (thread.isDefined) thread.get.send(socket, data)    
   }
   
   def stop() {
