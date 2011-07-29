@@ -31,20 +31,15 @@ class Server (host: InetAddress, port: Int) extends Log {
     
     override def run() {
       while (true) {
-        //println("handling changes")
         handleChanges()
-        //println("selecting")
         selector.select
-        //print("waking up with ")
-        if (selector.selectedKeys.isEmpty) {
-          log.info("Woke up with no selected keys! Keys:")
-          for (key <- selector.keys) {
-            log.info(" " + key + " in " + key.interestOps)
-          }
+        if (isInterrupted) {
+          for (key <- selector.keys; if key.attachment.isInstanceOf[Connection])
+            key.attachment.asInstanceOf[Connection] ! Connection.Closed
+          serverChannel.close
+          return
         }
-        //println
         for (key <- selector.selectedKeys; if key.isValid){
-          //println ("handling a key")
           if (key.isAcceptable) accept(key) 
           else if (key.isReadable) read(key)
           else if (key.isWritable) write(key)
