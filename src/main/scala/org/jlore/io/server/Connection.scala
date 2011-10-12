@@ -10,13 +10,16 @@ class Connection(server: Server, channel:SocketChannel) extends Actor with Log {
     loop {
       react { 
         case Read(bytes) =>
-          log.info(new String(bytes))
-          server.send(channel, bytes)
+          parse(bytes)
         case Closed =>
           log.info("A connection exiting!")
           exit()
       }
     }
+  }
+  
+  def parse(bytes:Array[Byte]) {
+    
   }
 }
 

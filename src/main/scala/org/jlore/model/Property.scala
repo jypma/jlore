@@ -1,6 +1,7 @@
 package org.jlore.model
 
 import org.jlore.core._
+import org.jlore.io.Serializer
 
 case class Property (
     obj:VersionedObject[Property], 
@@ -11,6 +12,12 @@ object Property {
   class Create (id:ID, val obj:VersionedObject[Property]) extends ChangeCommand(id) {
     def change (b: Branch) = new Property(obj) :: Nil
   }
+
+  CommandProtocolFactory.register(1, 1, new Serializer[Create] {
+    val id = field[ID](_.id) 
+    val obj = field[VersionedObject[Property]](_.obj)
+    def load = new Create (id, obj)    
+  })
   
   class SetName (id:ID, val p:VersionedObject[Property], n: Value) extends ChangeCommand(id) {
     def change (b: Branch) = {

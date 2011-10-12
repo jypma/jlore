@@ -38,4 +38,6 @@ object ID {
   def apply() = {
     new ID (node, System.currentTimeMillis, seq.incrementAndGet)
   }
+  
+  def load (node: Long, time: Long, seq:Long) = new ID (node, time, seq)
 }

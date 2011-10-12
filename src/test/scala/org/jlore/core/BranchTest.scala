@@ -2,7 +2,6 @@ package org.jlore.core
 
 import org.junit.runner.RunWith
 import org.specs.runner.JUnitSuiteRunner
-import org.specs.SpecificationWithJUnit
 import org.jlore.model._
 
 @RunWith(classOf[JUnitSuiteRunner])
