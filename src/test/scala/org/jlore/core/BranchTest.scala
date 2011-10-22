@@ -1,10 +1,10 @@
 package org.jlore.core
 
 import org.junit.runner.RunWith
-import org.specs.runner.JUnitSuiteRunner
+import org.specs2.runner.JUnitRunner
 import org.jlore.model._
 
-@RunWith(classOf[JUnitSuiteRunner])
+@RunWith(classOf[JUnitRunner])
 class BranchTest extends org.jlore.Specification {
   "a branch" should {
     var b = new Branch() 
@@ -29,7 +29,7 @@ class BranchTest extends org.jlore.Specification {
     }
     "have changes independent of its parent, until they are merged" in {
       b += new Property.SetName(ID(), myProp, Value("myRenamedProp"))
-      myProp.in(b) must notBe(myProp.in(parent))
+      myProp.in(b) must not be(myProp.in(parent))
       myProp.in(b).name.get.asString must_== "myRenamedProp"
       myProp.in(parent).name.get.asString must_== "myProp"
       

@@ -4,14 +4,16 @@ import scala.collection.mutable.WrappedArray
 import scala.collection.mutable
 
 class ByteBuffer extends ByteWriter[ByteBuffer] {
-  private var buffers: ArrayBuffer[mutable.Seq[Byte]] = ArrayBuffer.empty
+  private var buffers: ArrayBuffer[Seq[Byte]] = ArrayBuffer.empty
   private var pos = 0
   
-  def << (buf: Array[Byte]) = append(buf)
+  def << (buf: Seq[Byte]) = append(buf)
   
   def << (byte: Byte) = append(byte)
   
-  def append(buf: Array[Byte]) = { buffers += buf; this }
+  def << (byte: Int) = append(byte.toByte)
+  
+  def append(buf: Seq[Byte]) = { buffers += buf; this }
   
   def append(byte: Byte) = { 
     if (buffers.isEmpty || !buffers.last.isInstanceOf[ArrayBuffer[Byte]]) {
@@ -21,12 +23,29 @@ class ByteBuffer extends ByteWriter[ByteBuffer] {
     this
   }
   
-  def read[T](count:Int)(process: Seq[Byte]=>T): Option[T] = {
+  def read[T](count:Int): Option[Seq[Byte]] = {
+    if (!available(count)) None else Some(read(count))
+  }
+  
+  def ifRead[T](count:Int)(process: Seq[Byte]=>T): Option[T] = {
     if (!available(count)) None else Some(process(read(count)))
   }
   
-  def peek[T](count:Int)(process: Seq[Byte]=>T): Option[T] = {
+  def ifPeek[T](count:Int)(process: Seq[Byte]=>T): Option[T] = {
     if (!available(count)) None else Some(process(peek(count)))    
+  }
+  
+  def readUntil(endCondition: Byte => Boolean): Option[Seq[Byte]] = {
+    if (!available(1)) None else {
+      var count = 0
+      buffers.find {  
+        _.find {
+          count += 1
+          endCondition(_)
+        }.isDefined
+      }
+      Some(read(count))
+    }
   }
   
   private def read(count:Int):Seq[Byte] = {
@@ -69,11 +88,25 @@ class ByteBuffer extends ByteWriter[ByteBuffer] {
   }
   
   //TODO keep track of available bytes in a field instead
+  def size = {
+    buffers.foldLeft(0)(_ + _.size) - pos
+  }
+  
   def available(count:Int) = {
     var needed = count + pos
     buffers.find { buf =>
       needed -= buf.length
       needed <= 0
     }.isDefined
+  }
+  
+  override def toString = buffers.mkString + " @" + pos
+}
+
+object ByteBuffer {
+  def apply(contents: Seq[Byte]) = {
+    val buf = new ByteBuffer()
+    buf << contents
+    buf
   }
 }

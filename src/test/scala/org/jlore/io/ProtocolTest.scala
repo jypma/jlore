@@ -1,10 +1,11 @@
 package org.jlore.io
 
 import org.junit.runner.RunWith
-import org.specs.runner.JUnitSuiteRunner
+import org.specs2.runner.JUnitRunner
 import org.jlore.model._
+import org.specs2.mutable.Specification
 
-@RunWith(classOf[JUnitSuiteRunner])
+@RunWith(classOf[JUnitRunner])
 class ProtocolTest extends org.jlore.Specification{
   "protocols when registered in a protocol factory" should {
     val factory = new ProtocolFactory()
@@ -14,7 +15,7 @@ class ProtocolTest extends org.jlore.Specification{
         def load = new WithInt (i)    
       })
       val protocol = factory.instantiate
-      
+      1 must_== 1
     }
     
   }

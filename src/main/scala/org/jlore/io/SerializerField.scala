@@ -26,8 +26,11 @@ object SerializerField {
           buf << bytes
         }
         override def doRead(buf: ByteBuffer):Option[String] = {
-          val length = buf.peek(4)(readInt).getOrElse(return None)
-          buf.read(4 + length) { bytes => new String(bytes.slice(4, bytes.length).toArray, "UTF-8") }
+          buf.ifPeek(4)(readInt) flatMap { length =>
+            buf.ifRead(4 + length) { bytes => 
+              new String(bytes.slice(4, bytes.length).toArray, "UTF-8") 
+            }
+          }
         }      
       }
       case m if m <:< classManifest[ID] => new SerializerField[T,F,ID](writer) {
@@ -37,7 +40,7 @@ object SerializerField {
           writeLong(value.time, buf)          
         }
         override def doRead(buf: ByteBuffer):Option[ID] = {
-          buf.read(24) { bytes =>
+          buf.ifRead(24) { bytes =>
             ID.load(readLong(bytes.slice(0, 8)), 
                     readLong(bytes.slice(8, 16)), 
                     readLong(bytes.slice(16, 24)))
@@ -52,7 +55,7 @@ object SerializerField {
   private def field[T,F,G](writer: T=>F, expected: Int, doReadImpl: Seq[Byte]=>G, doWriteImpl: (G,ByteBuffer)=>_) = {
     new SerializerField[T,F,G](writer) {
       override def doRead(buf: ByteBuffer):Option[G] = {
-        buf.read(expected) { bytes => doReadImpl(bytes) }
+        buf.ifRead(expected) { bytes => doReadImpl(bytes) }
       }
       override def doWrite(value:G, buf: ByteBuffer) {
         doWriteImpl(value, buf)

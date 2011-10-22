@@ -24,11 +24,11 @@ class Protocol(private val readers: Map[Int,Map[Int,Serializer[_]]],
   
   def read[T](buf: ByteBuffer, done: T=>Unit) {
     if (currentMsg.isEmpty) {
-      currentMsg = buf.read(4)(SerializerField.readInt)
+      currentMsg = buf.ifRead(4)(SerializerField.readInt)
       if (currentMsg.isEmpty) return
     }
     if (currentVersion.isEmpty) {
-      currentVersion = buf.read(4)(SerializerField.readInt)
+      currentVersion = buf.ifRead(4)(SerializerField.readInt)
       if (currentVersion.isEmpty) return
     }
     

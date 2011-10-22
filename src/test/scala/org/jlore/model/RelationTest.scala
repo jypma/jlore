@@ -10,13 +10,13 @@ class RelationTest extends org.jlore.Specification  {
       val child = new VersionedObject[Relation](ID())
       b += new Relation.Create(ID(), parent, child)
     
-      parent.in(b).other must notBeNull
+      parent.in(b).other must not beNull;
       parent.in(b).other must be(child)
       parent.in(b).other.in(b).other must be(parent)
     
       b += new Relation.SetName(ID(), parent, Value("Parent"))
       parent.in(b).name.get.asString must_== "Parent"
-      parent.in(b).other must notBeNull
+      parent.in(b).other must not beNull;
       parent.in(b).other must be(child)
     
       b += new Relation.SetName(ID(), child, Value("Child"))
