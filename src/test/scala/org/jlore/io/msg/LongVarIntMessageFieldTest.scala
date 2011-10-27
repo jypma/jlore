@@ -6,18 +6,18 @@ import org.jlore.io.ByteBuffer
 import org.specs2.specification.Example
 
 @RunWith(classOf[JUnitRunner])
-class IntVarIntMessageFieldTest extends org.jlore.Specification {
-  "an int lower than 127" should test(126, 1) ;
-  "an int 127" should test(127, 1) ;
-  "an int 128" should test(128, 2) ;
-  "an big integer" should test(Int.MaxValue-1, 5) ;
+class LongVarIntMessageFieldTest extends org.jlore.Specification {
+  "zero" should test(0, 1) ;
+  "a small long" should test(127, 1) ;
+  "a moderate long" should test(256, 2) ;
+  "a big long" should test(Long.MaxValue, 9) ;
+  "a huge long" should test(Long.MinValue, 10) ;
   
-  def test(testValue: Int, expectedLength: Int):Example = { 
+  def test(testValue: Long, expectedLength: Int):Example = { 
     {
-      val i = new IntVarIntMessageField(testValue)
+      val i = new LongVarIntMessageField(testValue)
       "give its value when asked" in {
-        log.debug("" + Int.MaxValue)
-        i.asInt must_== Some(testValue)
+        i.asLong must_== Some(testValue)
       }
       "result in " + expectedLength + " bytes of output" in {
         val buf = new ByteBuffer()
@@ -29,8 +29,8 @@ class IntVarIntMessageFieldTest extends org.jlore.Specification {
         i.encodeTo(buf)
         log.debug("Encoded: " + buf)
         val bytes = buf.read(buf.size).get
-        val read = IntVarIntMessageField(bytes)
-        read.asInt.get must_== i.asInt.get
+        val read = LongVarIntMessageField(bytes)
+        read.asLong.get must_== i.asLong.get
       }
     }
   }

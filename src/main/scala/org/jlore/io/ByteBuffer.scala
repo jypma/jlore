@@ -7,11 +7,10 @@ class ByteBuffer extends ByteWriter[ByteBuffer] {
   private var buffers: ArrayBuffer[Seq[Byte]] = ArrayBuffer.empty
   private var pos = 0
   
-  def << (buf: Seq[Byte]) = append(buf)
-  
+  def << (buf: Seq[Byte]) = append(buf)  
   def << (byte: Byte) = append(byte)
-  
   def << (byte: Int) = append(byte.toByte)
+  def << (byte: Long) = append(byte.toByte)
   
   def append(buf: Seq[Byte]) = { buffers += buf; this }
   
