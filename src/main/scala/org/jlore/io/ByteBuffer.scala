@@ -13,7 +13,8 @@ class ByteBuffer extends ByteWriter[ByteBuffer] {
   def << (byte: Long) = append(byte.toByte)
   
   def append(buf: Seq[Byte]) = { buffers += buf; this }
-  
+  def append(byte: Int):ByteBuffer = append(byte.toByte)
+  def append(byte: Long):ByteBuffer = append(byte.toByte)
   def append(byte: Byte) = { 
     if (buffers.isEmpty || !buffers.last.isInstanceOf[ArrayBuffer[Byte]]) {
       buffers += new ArrayBuffer[Byte]()

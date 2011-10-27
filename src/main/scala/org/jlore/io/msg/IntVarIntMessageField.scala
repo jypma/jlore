@@ -28,7 +28,6 @@ class IntVarIntMessageField (val int: Int) extends VarIntMessageField {
 
 object IntVarIntMessageField extends Log {
   def apply(bytes: Seq[Byte]) = {
-    log.debug("reading " + bytes.length)
     new IntVarIntMessageField(bytes.length match {
       case 5 => (bytes(0) & clearMSB) |
                 (bytes(1) & clearMSB) << 7  |

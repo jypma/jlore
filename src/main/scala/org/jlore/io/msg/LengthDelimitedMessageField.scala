@@ -3,6 +3,7 @@ package org.jlore.io.msg
 import org.jlore.io.ByteBuffer
 
 class LengthDelimitedMessageField (val bytes:Seq[Byte]) extends MessageField {
+  override def typeMarker = 2
   override def asBytes:Seq[Byte] = bytes
   override def encodeTo(buf: ByteBuffer) {
     new IntVarIntMessageField(bytes.length).encodeTo(buf)

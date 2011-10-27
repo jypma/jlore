@@ -3,6 +3,7 @@ package org.jlore.io.msg
 import org.jlore.io.ByteBuffer
 
 trait MessageField {
+  def typeMarker:Int
   def asInt:Option[Int] = None
   def asLong:Option[Long] = None
   def asString:Option[String] = {
