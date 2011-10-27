@@ -1,4 +1,4 @@
 bin
 target
-.scala_dependencies.cache
+.cache
 .scala_dependencies
