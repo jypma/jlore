@@ -5,6 +5,6 @@ trait Log {
 }
 
 class ObjectLog {
-  private val _log = new Logger(getClass.getName)
-  def getlog = _log
+  private val log = new Logger(getClass.getName)
+  def _log = log
 }

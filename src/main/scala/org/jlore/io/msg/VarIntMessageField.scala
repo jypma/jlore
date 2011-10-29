@@ -16,7 +16,7 @@ object VarIntMessageField extends ObjectLog {
   
   def read(buf: ByteBuffer) = {
     buf.readUntil { b:Byte => (b & MSB) == 0 }.map { bytes =>
-      getlog.debug("Reading: " + bytes.mkString(","))
+      _log.debug("Reading: " + bytes.mkString(","))
       if (bytes.length < 5 || (bytes(4) & 0xF0) == 0) {
         IntVarIntMessageField(bytes)
       } else if (bytes.length < 10 || (bytes(9) & 0xF7) == 0) {
