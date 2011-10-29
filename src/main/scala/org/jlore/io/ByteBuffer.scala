@@ -48,6 +48,8 @@ class ByteBuffer extends ByteWriter[ByteBuffer] {
     }
   }
   
+  def asSeq = buffers.tail.foldLeft(buffers.head.slice(pos, buffers.head.length))(_ ++ _)
+  
   private def read(count:Int):Seq[Byte] = {
     if (pos + count < buffers.head.length) {
       val result = buffers.head.slice(pos, pos + count)

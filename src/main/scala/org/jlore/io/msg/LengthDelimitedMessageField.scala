@@ -12,6 +12,8 @@ class LengthDelimitedMessageField (val bytes:Seq[Byte]) extends MessageField {
 }
 
 object LengthDelimitedMessageField {
+  def apply(bytes:Seq[Byte]) = new LengthDelimitedMessageField(bytes)
+  
   def read(buf: ByteBuffer) = {
     VarIntMessageField.read(buf) flatMap (_.asInt) flatMap 
       (buf.read(_)) map (new LengthDelimitedMessageField(_))

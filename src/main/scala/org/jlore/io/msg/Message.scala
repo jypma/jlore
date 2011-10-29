@@ -17,6 +17,11 @@ class Message (val msg:Int, val version:Int, val fields:Map[Int,MessageFields] =
               new MessageFields(keyField._2 +: Nil))))
   }
   def apply(index: Int) = fields(index)
+  def encode = {
+    val buf = new ByteBuffer()
+    encodeTo(buf)
+    buf.asSeq
+  }
 }
 
 object Message extends Log {
