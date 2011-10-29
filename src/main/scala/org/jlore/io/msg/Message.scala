@@ -42,6 +42,7 @@ object Message extends Log {
             case 0 => VarIntMessageField.read(bytes)
             case 1 => Fixed64MessageField.read(bytes)
             case 2 => LengthDelimitedMessageField.read(bytes)
+            case 6 => Fixed128MessageField.read(bytes)
             case default => None
           }
           log.debug("field=" + field)

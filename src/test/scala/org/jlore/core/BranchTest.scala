@@ -9,7 +9,7 @@ class BranchTest extends org.jlore.Specification {
   "a branch" should {
     var b = new Branch() 
     "insert commands with earlier IDs before commands with later IDs" in {
-      val myProp = new VersionedObject[Property](ID())
+      val myProp = VersionedObject[Property]()
       val setNameToB = new Property.SetName(ID(), myProp, Value("PropB"))
       b += new Property.Create(ID(), myProp)
       b += new Property.SetName(ID(), myProp, Value("PropA"))
@@ -20,7 +20,7 @@ class BranchTest extends org.jlore.Specification {
   
   "a branch which has a parent" should {
     var parent = new Branch() 
-    val myProp = new VersionedObject[Property](ID())
+    val myProp = VersionedObject[Property]()
     parent += new Property.Create(ID(), myProp)
     parent += new Property.SetName(ID(), myProp, Value("myProp"))
     var b = new Branch (parent)

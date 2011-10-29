@@ -2,30 +2,60 @@ package org.jlore.io
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import org.jlore.core.ID
+import org.jlore.io.msg.Message
+import org.jlore.io.msg.MessageField
+import org.jlore.io.msg.VarIntMessageField
+import msg.Fixed128MessageField
+import org.jlore.core.VersionedObject
+import org.jlore.io.msg.MessageFields
 
 trait Serializer[T] {
-  private val fields = ArrayBuffer.empty[SerializerField[T,_,_]]
-  private var currentFieldIdx: Int = 0
+  private val fields = ArrayBuffer.empty[SerializerField[T,_]]
+  private var currentReadMsg: Message = null
   
-  protected def field[F : Manifest](writer: T=>F) = {
-    val f = SerializerField(writer)
+  protected def _ID(writer: T=>ID) = {
+    mkField[ID](writer, { 
+      id:ID => id2Msg(id) 
+    })
+  }
+  
+  protected def _VersionedObject[O](writer: T=>VersionedObject[O]) = {
+    mkField[VersionedObject[O]](writer, { 
+      o:VersionedObject[O] => id2Msg(o.id) 
+    })
+  }
+  
+  protected def _Int(writer: T=>Int) = mkField[Int](writer, VarIntMessageField(_))
+  
+  private def mkField[F](writer: T=>F, toMessageField: F=>MessageField) = {
+    val f =  new SerializerField(fields.size, writer) {
+      def write(obj:T, msg:Message) = msg + (index -> toMessageField(writer(obj)))
+    }
     fields += f
     f
   }
   
-  def write(obj: T, buf: ByteBuffer) { fields.foreach(_.write(obj, buf)) }
+  private def id2Msg(id:ID) = Fixed128MessageField(id.time, id.node.toLong << 32 | id.seq)
+  private def msg2Id(f:MessageFields) = {
+    val v = f.asDoubleLong.get
+    ID.load((v._2 >> 32).toInt, v._1, (v._2 & 0xFFFFFFFF).toInt)
+  }
+  
+  def write(obj: T, msg: Message) = {
+    fields.foldRight(msg)(_.write(obj, _))
+  }
 
   protected def load: T
   
-  implicit def field2value[F](field: SerializerField[T,F,_]) = field.readValue
+  implicit def f2v(field: SerializerField[T,Int]) = currentReadMsg(field.index).asInt.get
+  implicit def f2v(field: SerializerField[T,ID]) = msg2Id(currentReadMsg(field.index))
+  implicit def f2v[O](field: SerializerField[T,VersionedObject[O]]) = VersionedObject(
+    msg2Id(currentReadMsg(field.index))
+  )
   
-  def read(buf: ByteBuffer, done: T=>Unit) {
-    while (fields(currentFieldIdx).read(buf).isDefined) {
-      currentFieldIdx += 1
-      if (currentFieldIdx >= fields.length) {
-        done(load)
-        currentFieldIdx = 0
-      }
-    }
+  def read(msg:Message) = {
+    currentReadMsg = msg
+    load
   }
 }

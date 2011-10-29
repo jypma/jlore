@@ -3,6 +3,7 @@ package org.jlore.io.msg
 class MessageFields(val values:Seq[MessageField]) {
   def asInt = values.headOption flatMap (_.asInt)
   def asLong = values.headOption flatMap (_.asLong)
+  def asDoubleLong = values.headOption flatMap (_.asDoubleLong)
   def asMessage = values.headOption flatMap (_.asMessage)
 
   def asInts = values map (_.asInt) filter (_.isDefined) map (_.get)

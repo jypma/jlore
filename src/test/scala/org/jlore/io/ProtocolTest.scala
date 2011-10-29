@@ -11,7 +11,7 @@ class ProtocolTest extends org.jlore.Specification{
     val factory = new ProtocolFactory()
     "write and read a class with an int field" in {
       factory.register(1, 1, new Serializer[WithInt] {
-        val i = field[Int](_.i) 
+        val i = _Int(_.i) 
         def load = new WithInt (i)    
       })
       val protocol = factory.instantiate

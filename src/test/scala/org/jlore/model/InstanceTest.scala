@@ -6,9 +6,9 @@ class InstanceTest extends org.jlore.Specification  {
   "instances in branches" should {
     var b = new Branch()
     "be creatable and remember a propery value" in {
-      val i = new VersionedObject[Instance](ID())
+      val i = VersionedObject[Instance]()
       b += new Instance.Create(ID(), i)
-      val myProp = new VersionedObject[Property](ID())
+      val myProp = VersionedObject[Property]()
       b += new Property.Create(ID(), myProp)
       b += new Property.SetName(ID(), myProp, Value("MyProp"))
       b += new Instance.SetProperty(ID(), i, myProp, Some(Value("MyValue")))

@@ -14,8 +14,8 @@ object Property {
   }
 
   CommandProtocolFactory.register(1, 1, new Serializer[Create] {
-    val id = field[ID](_.id) 
-    val obj = field[VersionedObject[Property]](_.obj)
+    val id = _ID(_.id) 
+    val obj = _VersionedObject[Property](_.obj)
     def load = new Create (id, obj)    
   })
   

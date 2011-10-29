@@ -1,5 +1,6 @@
 package org.jlore.io
 import scala.collection.immutable.TreeMap
+import org.jlore.io.msg.Message
 
 class ProtocolFactory {
   private var readers: Map[Int, Map[Int, () => Serializer[_]]] = Map.empty
@@ -18,19 +19,11 @@ class ProtocolFactory {
 
 class Protocol(private val readers: Map[Int,Map[Int,Serializer[_]]],
                private val writers: Map[Class[_], Serializer[_]]) {
-  private var currentReader: Option[Serializer[_]] = None
-  private var currentMsg: Option[Int] = None
-  private var currentVersion: Option[Int] = None
-  
-  def read[T](buf: ByteBuffer, done: T=>Unit) {
-    if (currentMsg.isEmpty) {
-      currentMsg = buf.ifRead(4)(SerializerField.readInt)
-      if (currentMsg.isEmpty) return
+  def read[T:Manifest](msg: Message) = {
+    val result = readers.get(msg.msg) flatMap (_.get(msg.version)) map (_.read(msg))
+    result flatMap { obj:Any =>
+      if (obj.isInstanceOf[T]) Some(obj) else None 
     }
-    if (currentVersion.isEmpty) {
-      currentVersion = buf.ifRead(4)(SerializerField.readInt)
-      if (currentVersion.isEmpty) return
-    }
-    
   }
+
 }

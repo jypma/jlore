@@ -3,10 +3,10 @@ package org.jlore.core
 import java.util.UUID
 import java.net.NetworkInterface
 import java.security.MessageDigest
-import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicInteger
 import scala.collection.JavaConversions._
 
-case class ID private (node: Long, time: Long, seq: Long) extends Ordered[ID] {
+case class ID private (node: Int, time: Long, seq: Int) extends Ordered[ID] {
   def compare (other:ID) = if (time == other.time) {
     if (node == other.node) (seq - other.seq).toInt else (node - other.node).toInt
   } else {
@@ -15,13 +15,14 @@ case class ID private (node: Long, time: Long, seq: Long) extends Ordered[ID] {
 }
 
 object ID {
-  val seq = new AtomicLong()
+  val seq = new AtomicInteger()
   lazy val node = {
     val hash = MessageDigest.getInstance("MD5")
     NetworkInterface.getNetworkInterfaces().foreach { iface =>
       if (iface.getHardwareAddress != null) hash.update(iface.getHardwareAddress)
     }
-    toLong (hash.digest)
+    val long = toLong (hash.digest)
+    ((long >> 32) % (long & 0xFFFFFFFF)).toInt
   }
   
   private def toLong (bytes:Array[Byte]): Long = {
@@ -39,5 +40,5 @@ object ID {
     new ID (node, System.currentTimeMillis, seq.incrementAndGet)
   }
   
-  def load (node: Long, time: Long, seq:Long) = new ID (node, time, seq)
+  def load (node: Int, time: Long, seq:Int) = new ID (node, time, seq)
 }

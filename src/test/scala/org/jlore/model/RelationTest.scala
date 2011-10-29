@@ -6,8 +6,8 @@ class RelationTest extends org.jlore.Specification  {
   "relations in a branch" should {
     var b = new Branch()
     "be creatable and hold a name on both ends" in {
-      val parent = new VersionedObject[Relation](ID())
-      val child = new VersionedObject[Relation](ID())
+      val parent = VersionedObject[Relation]()
+      val child = VersionedObject[Relation]()
       b += new Relation.Create(ID(), parent, child)
     
       parent.in(b).other must not beNull;
