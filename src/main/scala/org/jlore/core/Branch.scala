@@ -32,10 +32,10 @@ class Branch (
 object Branch {
   val top = new Branch(null) 
   
-  class Create (id:ID) extends Command(id) {
+  case class Create (id:ID) extends Command {
     def run (b: Branch) = b
   }
-  class Merge (id:ID, sub: Branch) extends Command(id) {
+  case class Merge (id:ID, sub: Branch) extends Command {
     def run (b: Branch) = {
       println("finding ancestor of sub " + sub + " and b " + b)
       // Find earliest ancestor of [sub] that is also in [b]

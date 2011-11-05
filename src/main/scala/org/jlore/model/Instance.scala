@@ -9,12 +9,12 @@ case class Instance (
 ) extends ObjectVersion[Instance]
 
 object Instance {
-  class Create (id:ID, val obj: VersionedObject[Instance]) extends ChangeCommand(id) {
+  case class Create (id:ID, obj: VersionedObject[Instance]) extends ChangeCommand {
     def change (b: Branch) = new Instance(obj) :: Nil
   }
   
-  class SetProperty (id:ID, val i: VersionedObject[Instance], 
-      val p:VersionedObject[Property], n: Option[Value]) extends ChangeCommand(id) {
+  case class SetProperty (id:ID, i: VersionedObject[Instance], 
+      p:VersionedObject[Property], n: Option[Value]) extends ChangeCommand {
     def change (b: Branch) = {
       val instance = b.get[Instance](i)
       (n match {

@@ -9,6 +9,9 @@ import org.jlore.io.msg.VarIntMessageField
 import msg.Fixed128MessageField
 import org.jlore.core.VersionedObject
 import org.jlore.io.msg.MessageFields
+import org.jlore.model.Value
+import org.jlore.model.StringValue
+import org.jlore.model.IntValue
 
 trait Serializer[T] {
   private val fields = ArrayBuffer.empty[SerializerField[T,_]]
@@ -27,6 +30,13 @@ trait Serializer[T] {
   }
   
   protected def _Int(writer: T=>Int) = mkField[Int](writer, VarIntMessageField(_))
+  
+  protected def _Value(writer: T=>Value) = mkField[Value](writer, {
+    value: Value => value match {
+      case StringValue(s) => MessageField(s)
+      case IntValue(i) => MessageField(i)
+    }
+  })
   
   private def mkField[F](writer: T=>F, toMessageField: F=>MessageField) = {
     val f =  new SerializerField(fields.size, writer) {
@@ -48,11 +58,15 @@ trait Serializer[T] {
 
   protected def load: T
   
-  implicit def f2v(field: SerializerField[T,Int]) = currentReadMsg(field.index).asInt.get
-  implicit def f2v(field: SerializerField[T,ID]) = msg2Id(currentReadMsg(field.index))
-  implicit def f2v[O](field: SerializerField[T,VersionedObject[O]]) = VersionedObject(
+  implicit def int2v(field: SerializerField[T,Int]) = currentReadMsg(field.index).asInt.get
+  implicit def id2v(field: SerializerField[T,ID]) = msg2Id(currentReadMsg(field.index))
+  implicit def obj2v[O](field: SerializerField[T,VersionedObject[O]]) = VersionedObject(
     msg2Id(currentReadMsg(field.index))
   )
+  implicit def value2v(field: SerializerField[T,Value]) = {
+    val msgField = currentReadMsg(field.index)
+    msgField.asInt map (Value(_)) getOrElse Value(msgField.asString.get)
+  }
   
   def read(msg:Message) = {
     currentReadMsg = msg

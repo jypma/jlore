@@ -6,6 +6,7 @@ import org.jlore.logging.Log
 import scala.collection.mutable.ArrayBuffer
 
 class LongVarIntMessageField (val value: Long) extends VarIntMessageField with Log {
+  override def asString = Some(value.toString)
   override def asLong:Option[Long] = Some(value)
   override def encodeTo(buf: ByteBuffer) {
     val bytes = new Array[Long](10)

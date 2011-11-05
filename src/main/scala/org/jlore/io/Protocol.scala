@@ -1,29 +1,22 @@
 package org.jlore.io
 import scala.collection.immutable.TreeMap
 import org.jlore.io.msg.Message
-
-class ProtocolFactory {
-  private var readers: Map[Int, Map[Int, () => Serializer[_]]] = Map.empty
-  private var writers: Map[Class[_], Map[Int, () => Serializer[_]]] = Map.empty
-  
-  def register[T : Manifest] (msg: Int, version:Int, protocol: =>Serializer[T]) {
-    val f = {() => protocol}
-    val c = manifest[T].erasure.asInstanceOf[Class[T]]
-    readers += (msg -> (readers.getOrElse(msg, Map.empty) + (version -> f)))
-    writers += (c -> (writers.getOrElse(c, Map.empty) + (version -> f)))
-  }
-  
-  def instantiate() = new Protocol (readers.mapValues { _.mapValues { _() } },
-                                    writers.mapValues { m => m(m.keys.max)() })
-}
+import org.jlore.logging.Log
 
 class Protocol(private val readers: Map[Int,Map[Int,Serializer[_]]],
-               private val writers: Map[Class[_], Serializer[_]]) {
+               private val writers: Map[Class[_], (Int,Int,Serializer[_ >: AnyRef])]) extends Log {
+  log.debug("Writers are " + writers)
+    
   def read[T:Manifest](msg: Message) = {
     val result = readers.get(msg.msg) flatMap (_.get(msg.version)) map (_.read(msg))
     result flatMap { obj:Any =>
-      if (obj.isInstanceOf[T]) Some(obj) else None 
+      if (obj.isInstanceOf[T]) Some(obj.asInstanceOf[T]) else None 
     }
   }
 
+  def write[T >: AnyRef](obj:T) = {
+    log.debug("Writer for " + obj.getClass + " is " + writers.get(obj.getClass))
+    writers.get(obj.getClass) map (w => w._3.write(obj.asInstanceOf[AnyRef], 
+        new Message(w._1, w._2)))
+  }
 }

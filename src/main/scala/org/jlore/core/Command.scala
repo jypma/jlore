@@ -1,11 +1,12 @@
 package org.jlore.core
 
-abstract class Command (val id: ID) extends Ordered[Command] {
+abstract class Command extends Ordered[Command] {
+  def id: ID
   def compare (other:Command) = id.compare (other.id)
   def run (b: Branch): Branch
 }
 
-abstract class ChangeCommand (id:ID) extends Command(id) {
+abstract class ChangeCommand extends Command {
   def run (b: Branch) = {
     val newObjs = change(b)
     val newVersions = b.latestVersions ++ (newObjs map { v => (v.obj -> v) })

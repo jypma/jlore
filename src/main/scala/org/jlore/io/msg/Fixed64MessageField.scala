@@ -3,6 +3,7 @@ import org.jlore.io.ByteBuffer
 
 class Fixed64MessageField (val value:Long) extends MessageField {
   override def typeMarker = 1
+  override def asString = Some(value.toString)
   override def asLong:Option[Long] = Some(value)
   override def encodeTo(buf: ByteBuffer) {
     buf append (value & 0xFF)

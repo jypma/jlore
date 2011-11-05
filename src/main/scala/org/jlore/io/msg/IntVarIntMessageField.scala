@@ -5,7 +5,8 @@ import VarIntMessageField._
 import org.jlore.logging.Log
 
 class IntVarIntMessageField (val int: Int) extends VarIntMessageField {
-  override def asInt:Option[Int] = Some(int)
+  override def asString = Some(int.toString)
+  override def asInt = Some(int)
   override def encodeTo(buf: ByteBuffer) {
     val byte5 = ((int >> 28) & 0x0F)
     val byte4 = ((int >> 21) & 0x7F) 

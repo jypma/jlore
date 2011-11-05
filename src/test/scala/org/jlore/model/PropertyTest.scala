@@ -12,4 +12,17 @@ class PropertyTest extends org.jlore.Specification {
       myProp.in(b).name.get.asString must_== "MyProp"
     }
   }
+  
+  "a property creation command" should {
+    val myProp = VersionedObject[Property]()
+    val c = new Property.Create(ID(), myProp)
+    val p = CommandProtocolFactory.instantiate()
+    "be writeable and readable" in {
+      val msg = p.write(c)
+      msg must beSome
+      val readResult = p.read[Property.Create](msg.get)
+      readResult must beSome
+      readResult.get must_== c
+    }
+  }
 }
