@@ -13,13 +13,13 @@ object Instance {
     def change (b: Branch) = new Instance(obj) :: Nil
   }
   
-  case class SetProperty (id:ID, i: VersionedObject[Instance], 
-      p:VersionedObject[Property], n: Option[Value]) extends ChangeCommand {
+  case class SetProperty (id:ID, instance: VersionedObject[Instance], 
+      property:VersionedObject[Property], value: Option[Value]) extends ChangeCommand {
     def change (b: Branch) = {
-      val instance = b.get[Instance](i)
-      (n match {
-        case Some(value) => instance.copy(values = instance.values + (p -> value))
-        case None => instance.copy(values = instance.values - p)
+      val i = b.get[Instance](instance)
+      (value match {
+        case Some(v) => i.copy(values = i.values + (property -> v))
+        case None => i.copy(values = i.values - property)
       }) :: Nil
     }
   }

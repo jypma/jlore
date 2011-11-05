@@ -31,16 +31,29 @@ trait Serializer[T] {
   
   protected def _Int(writer: T=>Int) = mkField[Int](writer, VarIntMessageField(_))
   
-  protected def _Value(writer: T=>Value) = mkField[Value](writer, {
+  private val value2msg = {
     value: Value => value match {
       case StringValue(s) => MessageField(s)
       case IntValue(i) => MessageField(i)
     }
-  })
+  }
+  protected def _Value(writer: T=>Value) = mkField[Value](writer, value2msg)
+  protected def _OptionValue(writer: T=>Option[Value]) = mkOptionField[Value](writer, value2msg)
   
   private def mkField[F](writer: T=>F, toMessageField: F=>MessageField) = {
     val f =  new SerializerField(fields.size, writer) {
       def write(obj:T, msg:Message) = msg + (index -> toMessageField(writer(obj)))
+    }
+    fields += f
+    f
+  }
+  
+  private def mkOptionField[F](writer: T=>Option[F], toMessageField: F=>MessageField) = {
+    val f =  new SerializerField(fields.size, writer) {
+      def write(obj:T, msg:Message) = {
+        val value = writer(obj)
+        if (value.isDefined) msg + (index -> toMessageField(value.get)) else msg
+      }
     }
     fields += f
     f
@@ -66,6 +79,12 @@ trait Serializer[T] {
   implicit def value2v(field: SerializerField[T,Value]) = {
     val msgField = currentReadMsg(field.index)
     msgField.asInt map (Value(_)) getOrElse Value(msgField.asString.get)
+  }
+  implicit def optvalue2v(field: SerializerField[T,Option[Value]]): Option[Value] = {
+    val msgField = currentReadMsg(field.index)
+    if (msgField.isEmpty) None else {
+      msgField.asInt.map(Value(_)) orElse msgField.asString.map(Value(_))      
+    }
   }
   
   def read(msg:Message) = {

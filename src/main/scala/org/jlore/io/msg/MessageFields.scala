@@ -1,6 +1,6 @@
 package org.jlore.io.msg
 
-class MessageFields(val values:Seq[MessageField]) {
+class MessageFields(val values:Seq[MessageField] = Nil) {
   def asInt = values.headOption flatMap (_.asInt)
   def asLong = values.headOption flatMap (_.asLong)
   def asDoubleLong = values.headOption flatMap (_.asDoubleLong)
@@ -11,5 +11,7 @@ class MessageFields(val values:Seq[MessageField]) {
   def asLongs = values map (_.asLong) filter (_.isDefined) map (_.get)
   def asMessages = values map (_.asMessage) filter (_.isDefined) map (_.get)
   
-  def +(b: MessageField) = new MessageFields(b +: values) 
+  def +(b: MessageField) = new MessageFields(b +: values)
+  
+  def isEmpty = values.isEmpty
 }

@@ -3,6 +3,8 @@ import org.jlore.io.ByteBuffer
 import org.jlore.logging.Log
 
 class Message (val msg:Int, val version:Int, val fields:Map[Int,MessageFields] = Map.empty) {
+  import Message.emptyField
+  
   def encodeTo(buf: ByteBuffer) {
     VarIntMessageField(msg).encodeTo(buf)
     VarIntMessageField(version).encodeTo(buf)
@@ -16,7 +18,7 @@ class Message (val msg:Int, val version:Int, val fields:Map[Int,MessageFields] =
         (fields.get(keyField._1) map (_ + keyField._2) getOrElse 
               new MessageFields(keyField._2 +: Nil))))
   }
-  def apply(index: Int) = fields(index)
+  def apply(index: Int) = fields.getOrElse(index, emptyField) 
   def encode = {
     val buf = new ByteBuffer()
     encodeTo(buf)
@@ -25,6 +27,8 @@ class Message (val msg:Int, val version:Int, val fields:Map[Int,MessageFields] =
 }
 
 object Message extends Log {
+  private val emptyField = new MessageFields
+  
   def apply (bytes: ByteBuffer): Option[Message] = {
     VarIntMessageField.read(bytes) flatMap (_.asInt flatMap { msg =>
       log.debug ("msg=" + msg)

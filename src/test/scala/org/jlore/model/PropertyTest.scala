@@ -16,6 +16,7 @@ class PropertyTest extends org.jlore.Specification {
   "a property creation command" should {
     val myProp = VersionedObject[Property]()
     val c = new Property.Create(ID(), myProp)
+    val n = new Property.SetName(ID(), myProp, Value("MyProp"))
     val p = CommandProtocolFactory.instantiate()
     "be writeable and readable" in {
       val msg = p.write(c)
@@ -23,6 +24,8 @@ class PropertyTest extends org.jlore.Specification {
       val readResult = p.read[Property.Create](msg.get)
       readResult must beSome
       readResult.get must_== c
+      
+      p.read[Property.SetName](p.write(n).get).get must_== n
     }
   }
 }
