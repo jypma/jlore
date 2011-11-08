@@ -22,6 +22,7 @@ class Connection(server: Server, channel:SocketChannel) extends Actor with Log {
           parse()
         case Closed =>
           log.info("A connection exiting!")
+          worker ! ConnectionWorker.Done
           exit()
       }
     }

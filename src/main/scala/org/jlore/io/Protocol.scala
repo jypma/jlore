@@ -5,8 +5,6 @@ import org.jlore.logging.Log
 
 class Protocol(private val readers: Map[Int,Map[Int,Serializer[_]]],
                private val writers: Map[Class[_], (Int,Int,Serializer[_ >: AnyRef])]) extends Log {
-  log.debug("Writers are " + writers)
-    
   def read[T:Manifest](msg: Message) = {
     val result = readers.get(msg.msg) flatMap (_.get(msg.version)) map (_.read(msg))
     result flatMap { obj:Any =>

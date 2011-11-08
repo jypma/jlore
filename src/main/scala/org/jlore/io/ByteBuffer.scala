@@ -2,10 +2,10 @@ package org.jlore.io
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.WrappedArray
 import scala.collection.mutable
+import org.jlore.logging.Log
 
-class ByteBuffer extends ByteWriter[ByteBuffer] {
+class ByteBuffer extends ByteWriter[ByteBuffer] with Log {
   private var buffers: ArrayBuffer[Seq[Byte]] = ArrayBuffer.empty
-  private var pos = 0
   
   def << (buf: Seq[Byte]) = append(buf)  
   def << (byte: Byte) = append(byte)
@@ -39,31 +39,31 @@ class ByteBuffer extends ByteWriter[ByteBuffer] {
     if (!available(1)) None else {
       var count = 0
       buffers.find {  
-        _.find {
+        _.find { b =>
           count += 1
-          endCondition(_)
+          log.debug ("Checking " + b + " in " + this + ": " + endCondition(b))
+          endCondition(b)
         }.isDefined
       }
       Some(read(count))
     }
   }
   
-  def asSeq = buffers.tail.foldLeft(buffers.head.slice(pos, buffers.head.length))(_ ++ _)
+  def asSeq = buffers.fold(Seq.empty[Byte])(_ ++ _)
   
   private def read(count:Int):Seq[Byte] = {
-    if (pos + count < buffers.head.length) {
-      val result = buffers.head.slice(pos, pos + count)
-      pos += count
+    if (count < buffers.head.length) {
+      val result = buffers.head.slice(0, count)
+      buffers(0) = buffers.head.drop(count)
       result
     } else {
       var needed = count
       var result = new ArrayBuffer[Byte](count)
       while (needed > 0) {
-        if (pos < buffers.head.length) {
-        	result ++= buffers.head.slice(pos, buffers.head.length)
+        if (!buffers.head.isEmpty) {
+        	result ++= buffers.head
         }
-        needed -= (buffers.head.length - pos)
-        pos = 0
+        needed -= buffers.head.length
         buffers.remove(0)
       }
       result
@@ -71,19 +71,20 @@ class ByteBuffer extends ByteWriter[ByteBuffer] {
   }
   
   private def peek(count:Int):Seq[Byte] = {
-    if (pos + count < buffers.head.length) {
-      buffers.head.slice(pos, pos + count)
+    if (count < buffers.head.length) {
+      buffers.head.slice(0, count)
     } else {
       var needed = count
       var result = new ArrayBuffer[Byte](count)
-      var ourpos = pos
+      var ourpos = 0
+      var ourbuffer = 0
       while (needed > 0) {
-        if (ourpos < buffers.head.length) {
-        	result ++= buffers.head.slice(ourpos, buffers.head.length)
+        if (ourpos < buffers(ourbuffer).length) {
+        	result ++= buffers(ourbuffer).slice(ourpos, buffers(ourbuffer).length)
         }
-        needed -= (buffers.head.length - ourpos)
+        needed -= (buffers(ourbuffer).length - ourpos)
         ourpos = 0
-        buffers.remove(0)
+        ourbuffer += 1
       }
       result
     }
@@ -91,18 +92,18 @@ class ByteBuffer extends ByteWriter[ByteBuffer] {
   
   //TODO keep track of available bytes in a field instead
   def size = {
-    buffers.foldLeft(0)(_ + _.size) - pos
+    buffers.foldLeft(0)(_ + _.size)
   }
   
   def available(count:Int) = {
-    var needed = count + pos
+    var needed = count
     buffers.find { buf =>
       needed -= buf.length
       needed <= 0
     }.isDefined
   }
   
-  override def toString = buffers.mkString + " @" + pos
+  override def toString = buffers.mkString 
 }
 
 object ByteBuffer {

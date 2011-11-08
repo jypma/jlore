@@ -2,14 +2,16 @@ package org.jlore.io.msg
 import org.jlore.io.ByteBuffer
 import org.jlore.logging.Log
 
-class Message (val msg:Int, val version:Int, val fields:Map[Int,MessageFields] = Map.empty) {
+case class Message (msg:Int, version:Int, fields:Map[Int,MessageFields] = Map.empty) extends Log {
   import Message.emptyField
   
   def encodeTo(buf: ByteBuffer) {
     VarIntMessageField(msg).encodeTo(buf)
     VarIntMessageField(version).encodeTo(buf)
     for ((key, fieldValues) <- fields; field <- fieldValues.values) {
-      VarIntMessageField(key << 3 | field.typeMarker).encodeTo(buf)
+      val i = (key << 3) | field.typeMarker
+      VarIntMessageField(i).encodeTo(buf)
+      log.debug("key " + key + " marker " + field.typeMarker + " i " + i + " buf " + buf)
       field.encodeTo(buf)
     }
   }
@@ -51,8 +53,7 @@ object Message extends Log {
           }
           log.debug("field=" + field)
           if (field.isEmpty) return None
-          fields += (index -> (fields.get(index) map (_ + field.get) getOrElse 
-              new MessageFields(field.get +: Nil)))
+          fields += (index -> (fields.getOrElse(index, new MessageFields()) + field.get))
           log.debug("fields=" + fields)
         }
         Some(new Message(msg,version,fields))

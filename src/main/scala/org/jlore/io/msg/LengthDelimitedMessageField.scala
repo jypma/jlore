@@ -2,7 +2,7 @@ package org.jlore.io.msg
 
 import org.jlore.io.ByteBuffer
 
-class LengthDelimitedMessageField (val bytes:Seq[Byte]) extends MessageField {
+case class LengthDelimitedMessageField (bytes:Seq[Byte]) extends MessageField {
   override def typeMarker = 2
   override def asBytes:Seq[Byte] = bytes
   override def encodeTo(buf: ByteBuffer) {
@@ -12,8 +12,6 @@ class LengthDelimitedMessageField (val bytes:Seq[Byte]) extends MessageField {
 }
 
 object LengthDelimitedMessageField {
-  def apply(bytes:Seq[Byte]) = new LengthDelimitedMessageField(bytes)
-  
   def read(buf: ByteBuffer) = {
     VarIntMessageField.read(buf) flatMap (_.asInt) flatMap 
       (buf.read(_)) map (new LengthDelimitedMessageField(_))

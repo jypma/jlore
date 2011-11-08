@@ -4,7 +4,7 @@ import org.jlore.io.ByteBuffer
 import VarIntMessageField._
 import org.jlore.logging.Log
 
-class IntVarIntMessageField (val int: Int) extends VarIntMessageField {
+case class IntVarIntMessageField (val int: Int) extends VarIntMessageField {
   override def asString = Some(int.toString)
   override def asInt = Some(int)
   override def encodeTo(buf: ByteBuffer) {
