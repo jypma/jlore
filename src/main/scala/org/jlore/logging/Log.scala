@@ -1,10 +1,10 @@
 package org.jlore.logging
 
 trait Log {
-  protected val log = new Logger(getClass.getName)
+  protected val log = new Logger(LogTree.getClassNode(getClass))
 }
 
 class ObjectLog {
-  private val log = new Logger(getClass.getName)
+  private val log = new Logger(LogTree.getClassNode(getClass))
   def _log = log
 }
