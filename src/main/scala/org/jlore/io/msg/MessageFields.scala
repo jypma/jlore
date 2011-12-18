@@ -10,6 +10,7 @@ case class MessageFields(val values:Seq[MessageField] = Nil) {
   def asInts = values map (_.asInt) filter (_.isDefined) map (_.get)
   def asLongs = values map (_.asLong) filter (_.isDefined) map (_.get)
   def asMessages = values map (_.asMessage) filter (_.isDefined) map (_.get)
+  def asDoubleLongs = values map (_.asDoubleLong) filter (_.isDefined) map (_.get)
   
   def +(b: MessageField) = new MessageFields(values :+ b)
   

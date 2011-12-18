@@ -2,10 +2,11 @@ package org.jlore.model
 
 import org.jlore.core._
 import org.jlore.io.Serializer
+import org.jlore.model.i18n.Name
 
 case class Property (
     obj:VersionedObject[Property], 
-    name: Option[Value] = None
+    names: Seq[VersionedObject[Name]] = Nil
 ) extends ObjectVersion[Property] 
 
 object Property {
@@ -13,9 +14,10 @@ object Property {
     def change (b: Branch) = new Property(property) :: Nil
   }
 
-  case class SetName (id:ID, property:VersionedObject[Property], name: Value) extends ChangeCommand {
+  case class AddNames (id:ID, property:VersionedObject[Property], names: Seq[VersionedObject[Name]]) extends ChangeCommand {
     def change (b: Branch) = {
-      b.get[Property](property).copy(name=Some(name)) :: Nil
+      val p = b.get[Property](property)
+      p.copy(names = names ++: p.names) :: Nil
     }
   }
 }

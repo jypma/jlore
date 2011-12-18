@@ -3,40 +3,41 @@ package org.jlore.core
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import org.jlore.model._
+import org.jlore.model.i18n.Locale
 
 @RunWith(classOf[JUnitRunner])
 class BranchTest extends org.jlore.Specification {
   "a branch" should {
     var b = new Branch() 
     "insert commands with earlier IDs before commands with later IDs" in {
-      val myProp = VersionedObject[Property]()
-      val setNameToB = new Property.SetName(ID(), myProp, Value("PropB"))
-      b += new Property.Create(ID(), myProp)
-      b += new Property.SetName(ID(), myProp, Value("PropA"))
+      val myLocale = VersionedObject[Locale]()
+      val setNameToB = new Locale.SetIdentifier(ID(), myLocale, Some(Value("PropB")))
+      b += new Locale.Create(ID(), myLocale)
+      b += new Locale.SetIdentifier(ID(), myLocale, Some(Value("PropA")))
       b += setNameToB
-      myProp.in(b).name.get.asString must_== "PropA"
+      myLocale.in(b).identifier.get.asString must_== "PropA"
     }
   }
   
   "a branch which has a parent" should {
     var parent = new Branch() 
-    val myProp = VersionedObject[Property]()
-    parent += new Property.Create(ID(), myProp)
-    parent += new Property.SetName(ID(), myProp, Value("myProp"))
+    val myLocale = VersionedObject[Locale]()
+    parent += new Locale.Create(ID(), myLocale)
+    parent += new Locale.SetIdentifier(ID(), myLocale, Some(Value("myLocale")))
     var b = new Branch (parent)
     "remember the latest values of its parent" in {
-      myProp.in(b) must be(myProp.in(parent))
+      myLocale.in(b) must be(myLocale.in(parent))
     }
     "have changes independent of its parent, until they are merged" in {
-      b += new Property.SetName(ID(), myProp, Value("myRenamedProp"))
-      myProp.in(b) must not be(myProp.in(parent))
-      myProp.in(b).name.get.asString must_== "myRenamedProp"
-      myProp.in(parent).name.get.asString must_== "myProp"
+      b += new Locale.SetIdentifier(ID(), myLocale, Some(Value("myRenamedLocale")))
+      myLocale.in(b) must not be(myLocale.in(parent))
+      myLocale.in(b).identifier.get.asString must_== "myRenamedLocale"
+      myLocale.in(parent).identifier.get.asString must_== "myLocale"
       
       parent += new Branch.Merge(ID(), b)
-      myProp.in(parent).name.get.asString must_== "myRenamedProp"
+      myLocale.in(parent).identifier.get.asString must_== "myRenamedLocale"
       // only equality (objects are re-created for the merged branch)
-      myProp.in(b) must_== myProp.in(parent) 
+      myLocale.in(b) must_== myLocale.in(parent) 
     }
   }
 }

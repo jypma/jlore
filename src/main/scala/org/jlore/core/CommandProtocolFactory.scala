@@ -3,6 +3,7 @@ package org.jlore.core
 import org.jlore.io.ProtocolFactory
 import org.jlore.model._
 import org.jlore.io.Serializer
+import org.jlore.model.i18n.Name
 
 object CommandProtocolFactory extends ProtocolFactory {
     register(1, 1, new Serializer[Property.Create] {
@@ -10,11 +11,11 @@ object CommandProtocolFactory extends ProtocolFactory {
       val property = _VersionedObject[Property](_.property)
       def load = new Property.Create (id, property)    
     })
-    register(2, 1, new Serializer[Property.SetName] {
+    register(2, 1, new Serializer[Property.AddNames] {
       val id = _ID(_.id) 
       val property = _VersionedObject[Property](_.property)
-      val name = _Value(_.name)
-      def load = new Property.SetName (id, property, name)    
+      val names = _SeqVersionedObject[Name](_.names)
+      def load = new Property.AddNames (id, property, names)    
     })    
     register(3, 1, new Serializer[Instance.Create] {
       val id = _ID(_.id) 
