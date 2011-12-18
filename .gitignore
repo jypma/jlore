@@ -2,3 +2,7 @@ bin
 target
 .cache
 .scala_dependencies
+.classpath
+.project
+.settings
+
