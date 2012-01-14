@@ -77,7 +77,7 @@ trait Serializer[T] {
   }
   
   
-  private def id2Msg(id:ID) = Fixed128MessageField(id.time, id.node.toLong << 32 | id.seq)
+  private def id2Msg(id:ID) = Fixed128MessageField(id.time, id.node.toLong << 32 | id.seq.toLong)
   private val unpackId = { v:(Long,Long) => ID.load((v._2 >> 32).toInt, v._1, (v._2 & 0xFFFFFFFF).toInt) }
   private def msg2Id(f:MessageFields) = f.asDoubleLong map unpackId 
   private def msg2Ids(f:MessageFields) = f.asDoubleLongs map unpackId

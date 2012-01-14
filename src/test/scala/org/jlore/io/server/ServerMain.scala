@@ -2,7 +2,7 @@ package org.jlore.io.server
 import org.jlore.logging.Log
 
 object ServerMain extends App with Log {
-  val server = new Server (9090)
+  val server = new Server (9090, new System)
   server.start
   Thread.sleep(20000)
   log.info("Time's up. Stopping server.")

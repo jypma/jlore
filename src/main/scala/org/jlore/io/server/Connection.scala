@@ -9,9 +9,9 @@ import org.jlore.io.msg.Message
 class Connection(server: Server, channel:SocketChannel) extends Actor with Log {
   import Connection._
   
-  val worker = new ConnectionWorker()
-  val buf = new ByteBuffer()
-  var messageSize:Option[Int] = None
+  private val buf = new ByteBuffer()
+  private var messageSize:Option[Int] = None
+  private val protocol = new SystemProtocolFactory().instantiate()
   
   def act() {
     log.info("A connection acting!")
@@ -22,13 +22,13 @@ class Connection(server: Server, channel:SocketChannel) extends Actor with Log {
           parse()
         case Closed =>
           log.info("A connection exiting!")
-          worker ! ConnectionWorker.Done
+          server.system ! System.Done
           exit()
       }
     }
   }
   
-  def parse() {
+  private def parse() {
     if (!messageSize.isDefined) {
       messageSize = VarIntMessageField.read(buf) map { _.asInt.get }
     }
@@ -40,18 +40,8 @@ class Connection(server: Server, channel:SocketChannel) extends Actor with Log {
     }
   }
   
-  def process (message: Message) {
-    /*
-    message.msg match {
-      case 0 => worker ! ConnectionWorker.SelectBranch(message(0).toInt.get, message(1).toID.get)
-      case 1 => worker ! ConnectionWorker.PushCommands(message(0).toInt.get, message(1).toMessages.get)
-    }
-    */
-    // unpack using ConnectionProtocolFactory
-    // messages therein: 
-    //   SelectBranch -> Register a shortcut for refering to a branch by int in later msgs
-    //                   (0 is implied to be MASTER branch)
-    //   PushCommands -> Upload a bunch of commands to a given branch
+  private def process (message: Message) {
+    protocol.read(message).foreach(server.system ! _)
   }
 }
 

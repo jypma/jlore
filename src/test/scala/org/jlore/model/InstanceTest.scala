@@ -24,7 +24,7 @@ class InstanceTest extends org.jlore.Specification  {
       val createP = new Property.Create(ID(), p)
       val createI = new Instance.Create(ID(), i)
       val setP = new Instance.SetProperty(ID(), i, p, Some(Value("MyValue")))
-      val f = CommandProtocolFactory.instantiate()
+      val f = new CommandProtocolFactory().instantiate()
       "be writeable and readable" in {
         val msg = f.write(setP)
         msg must beSome
@@ -40,7 +40,7 @@ class InstanceTest extends org.jlore.Specification  {
       val createP = new Property.Create(ID(), p)
       val createI = new Instance.Create(ID(), i)
       val setP = new Instance.SetProperty(ID(), i, p, None)
-      val f = CommandProtocolFactory.instantiate()
+      val f = new CommandProtocolFactory().instantiate()
       "be writeable and readable" in {
         val msg = f.write(setP)
         msg must beSome

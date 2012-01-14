@@ -11,8 +11,8 @@ case class Message (msg:Int, version:Int, fields:Map[Int,MessageFields] = Map.em
     for ((key, fieldValues) <- fields; field <- fieldValues.values) {
       val i = (key << 3) | field.typeMarker
       VarIntMessageField(i).encodeTo(buf)
-      log.debug("key " + key + " marker " + field.typeMarker + " i " + i + " buf " + buf)
       field.encodeTo(buf)
+      log.debug("key " + key + " marker " + field.typeMarker + " i " + i + " buf " + buf)
     }
   }
   def +(keyField:(Int,MessageField)) = {

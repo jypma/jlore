@@ -5,5 +5,5 @@ import org.jlore.io.msg.Message
 
 object Config {
        "org.jlore" |- DEBUG
-  classOf[Message] |- WARN  
+ // classOf[Message] |- WARN  
 }

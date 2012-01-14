@@ -25,7 +25,7 @@ class PropertyTest extends org.jlore.Specification {
     val bootstrap = new BranchBootstrap()
     import bootstrap._
     val n = new Property.AddNames(ID(), myProp, ("MyProp","MyProps"))
-    val p = CommandProtocolFactory.instantiate()
+    val p = new CommandProtocolFactory().instantiate()
     "be writeable and readable" in {
       val msg = p.write(c)
       msg must beSome

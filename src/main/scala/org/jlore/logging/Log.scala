@@ -4,7 +4,6 @@ trait Log {
   protected val log = new Logger(LogTree.getClassNode(getClass))
 }
 
-class ObjectLog {
-  private val log = new Logger(LogTree.getClassNode(getClass))
-  def _log = log
+object Log {
+  def log(obj:AnyRef) = new Logger(LogTree.getClassNode(obj.getClass))
 }

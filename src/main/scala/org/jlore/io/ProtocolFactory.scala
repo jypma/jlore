@@ -13,6 +13,11 @@ class ProtocolFactory (initializers: AnyRef*) extends Log {
     val f = {() => protocol}
     val c = manifest[T].erasure.asInstanceOf[Class[T]]
     log.info("Installing for " + c)
+    if (readers.get(msg).flatMap(_.get(version)).isDefined) {
+      throw new IllegalArgumentException ("Duplicate definition of msg " + msg
+          + ", version " + version + " in " + this)
+    }
+    
     readers += (msg -> (readers.getOrElse(msg, Map.empty) + (version -> f)))
     val existingWriter = writers.get(c)
     if (existingWriter.isEmpty || version > existingWriter.get._2) {

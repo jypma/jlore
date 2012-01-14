@@ -14,8 +14,8 @@ import java.util.concurrent.LinkedBlockingQueue
 import scala.collection.mutable.ArrayBuffer
 import org.jlore.logging.Log
 
-class Server (host: InetAddress, port: Int) extends Log {
-  def this(port: Int) = this(null, port)
+class Server (val host: InetAddress, val port: Int, val system:System) extends Log {
+  def this(port: Int, system:System) = this(null, port, system)
   private var thread: Option[ServerThread] = None
   
   class ServerThread extends Thread {
